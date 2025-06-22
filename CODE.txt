@@ -1,0 +1,548 @@
+CREATE TABLE Insurance (
+    InsuranceID VARCHAR(10) PRIMARY KEY,
+    CompName VARCHAR(50),
+    StartDate DATE,
+    EndDate DATE,
+    CoInsurance VARCHAR(50)
+);
+-- Table: Customer
+CREATE TABLE Customer (
+    AadharNo VARCHAR(12) PRIMARY KEY,
+    Fname VARCHAR(50),
+    Lname VARCHAR(50),
+    Gender CHAR(1),
+    DoB DATE,
+    Address VARCHAR(100),
+    Phone VARCHAR(15),
+    InsuranceID VARCHAR(10),
+    FOREIGN KEY (InsuranceID) REFERENCES Insurance(InsuranceID)
+);
+-- Table: Prescription
+CREATE TABLE Prescription (
+    PrespID VARCHAR(10) PRIMARY KEY,
+    AadharNo VARCHAR(12),
+    DocID VARCHAR(10),
+    PrespDate DATE,
+    FOREIGN KEY (AadharNo) REFERENCES Customer(AadharNo)
+);
+-- Table: PrescriptionDrug
+CREATE TABLE PrescriptionDrug (
+    PrespID VARCHAR(10),
+    DrugName VARCHAR(50),
+    PrespQty INT,
+    RefillLimit INT,
+    PRIMARY KEY (PrespID, DrugName),
+    FOREIGN KEY (PrespID) REFERENCES Prescription(PrespID)
+);
+-- Table: Employee
+CREATE TABLE Employee (
+    EmpID VARCHAR(10) PRIMARY KEY,
+    Fname VARCHAR(50),
+    Lname VARCHAR(50),
+    AadharNo VARCHAR(12),
+    Phone VARCHAR(15),
+    License VARCHAR(20),
+    Role VARCHAR(50),
+    StartDate DATE,
+    EndDate DATE,
+    Salary DECIMAL(10, 2),
+    DoB DATE
+);
+-- Table: Order
+CREATE TABLE Orders (
+    OrderID VARCHAR(10) PRIMARY KEY,
+    PrespID VARCHAR(10),
+    EmpID VARCHAR(10),
+    OrderDate DATE,
+    FOREIGN KEY (PrespID) REFERENCES Prescription(PrespID),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+-- Table: OrderedDrugs
+CREATE TABLE OrderedDrugs (
+    OrderID VARCHAR(10),
+    DrugName VARCHAR(50),
+    BatchNo VARCHAR(10),
+    OrderedQty INT,
+    Price DECIMAL(10, 2),
+    PRIMARY KEY (OrderID, DrugName, BatchNo),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+-- Table: Bill
+CREATE TABLE Bill (
+    OrderID VARCHAR(10),
+    AadharNo VARCHAR(12),
+    TotalAmt DECIMAL(10, 2),
+    InsrPay DECIMAL(10, 2),
+    CustPay DECIMAL(10, 2),
+    PRIMARY KEY (OrderID, AadharNo),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (AadharNo) REFERENCES Customer(AadharNo)
+);
+-- Table: Employee_Notification
+CREATE TABLE Employee_Notification (
+    EmpID VARCHAR(10),
+    NotificationID VARCHAR(10),
+    PRIMARY KEY (EmpID, NotificationID),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+-- Table: Notification
+CREATE TABLE Notification (
+    NotificationID VARCHAR(10) PRIMARY KEY,
+    Type VARCHAR(50),
+    Message VARCHAR(70)
+);
+-- Table: Employee_Disposed_Drugs
+CREATE TABLE Employee_Disposed_Drugs (
+    EmpID VARCHAR(10),
+    DrugName VARCHAR(50),
+    BatchNumber VARCHAR(10),
+    DisposalDate DATE,
+    PRIMARY KEY (EmpID, DrugName, BatchNumber),
+    FOREIGN KEY (EmpID) REFERENCES Employee(EmpID)
+);
+-- Table: Disposed
+CREATE TABLE Disposed (
+    DrugName VARCHAR(50),
+    BatchNo VARCHAR(10),
+    DisposalDate DATE,
+    DispQty INT,
+    Company VARCHAR(50),
+    PRIMARY KEY (DrugName, BatchNo)
+);
+-- Table: Medicine
+CREATE TABLE Medicine (
+    DrugName VARCHAR(50),
+    BatchNo VARCHAR(10),
+    Price DECIMAL(10, 2),
+    StockQty INT,
+    Manufacturer VARCHAR(50),
+    MedType VARCHAR(50),
+    ExpiryDate DATE,
+    PRIMARY KEY (DrugName, BatchNo)
+);
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS001', 'HealthCare', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2025-01-01', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS002', 'LifePlus', TO_DATE('2023-03-15', 'YYYY-MM-DD'), TO_DATE('2028-03-15', 'YYYY-MM-DD'), 'No');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS003', 'SecureLife', TO_DATE('2021-06-01', 'YYYY-MM-DD'), TO_DATE('2026-06-01', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS004', 'MediCare', TO_DATE('2022-07-10', 'YYYY-MM-DD'), TO_DATE('2027-07-10', 'YYYY-MM-DD'), 'No');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS005', 'Wellness', TO_DATE('2023-01-01', 'YYYY-MM-DD'), TO_DATE('2028-01-01', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS006', 'CarePlus', TO_DATE('2023-02-01', 'YYYY-MM-DD'), TO_DATE('2028-02-01', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS007', 'TotalHealth', TO_DATE('2023-04-01', 'YYYY-MM-DD'), TO_DATE('2028-04-01', 'YYYY-MM-DD'), 'No');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS008', 'FamilyGuard', TO_DATE('2021-08-15', 'YYYY-MM-DD'), TO_DATE('2026-08-15', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS009', 'LifeSecure', TO_DATE('2023-01-15', 'YYYY-MM-DD'), TO_DATE('2028-01-15', 'YYYY-MM-DD'), 'Yes');
+
+INSERT INTO Insurance (InsuranceID, CompName, StartDate, EndDate, CoInsurance) VALUES 
+('INS010', 'SafeHealth', TO_DATE('2022-09-01', 'YYYY-MM-DD'), TO_DATE('2027-09-01', 'YYYY-MM-DD'), 'No');
+
+
+
+INSERT INTO Customer VALUES 
+('123456789012', 'John', 'Doe', 'M', TO_DATE('1990-05-15', 'YYYY-MM-DD'), '123 Street', '1234567890', 'INS001');
+INSERT INTO Customer VALUES 
+('223456789012', 'Jane', 'Smith', 'F', TO_DATE('1985-08-25', 'YYYY-MM-DD'), '456 Avenue', '0987654321', 'INS002');
+INSERT INTO Customer VALUES 
+('323456789012', 'Bob', 'Johnson', 'M', TO_DATE('1975-03-10', 'YYYY-MM-DD'), '789 Boulevard', '1112223333', 'INS003');
+INSERT INTO Customer VALUES 
+('423456789012', 'Alice', 'Brown', 'F', TO_DATE('1992-07-30', 'YYYY-MM-DD'), '101 Road', '4445556666', 'INS004');
+INSERT INTO Customer VALUES 
+('523456789012', 'Eve', 'White', 'F', TO_DATE('1988-12-05', 'YYYY-MM-DD'), '202 Drive', '7778889999', 'INS005');
+INSERT INTO Customer VALUES 
+('623456789012', 'Michael', 'Green', 'M', TO_DATE('1980-11-22', 'YYYY-MM-DD'), '303 Lane', '8889990000', 'INS006');
+INSERT INTO Customer VALUES 
+('723456789012', 'Linda', 'Black', 'F', TO_DATE('1995-04-18', 'YYYY-MM-DD'), '404 Path', '9990001111', 'INS007');
+INSERT INTO Customer VALUES 
+('823456789012', 'David', 'Clark', 'M', TO_DATE('1983-02-12', 'YYYY-MM-DD'), '505 Trail', '2223334444', 'INS008');
+INSERT INTO Customer VALUES 
+('923456789012', 'Susan', 'White', 'F', TO_DATE('1991-09-29', 'YYYY-MM-DD'), '606 Place', '5556667777', 'INS009');
+INSERT INTO Customer VALUES 
+('023456789012', 'Robert', 'Davis', 'M', TO_DATE('1970-06-14', 'YYYY-MM-DD'), '707 Way', '4445556666', 'INS010');
+
+
+-- Insert data into Prescription
+INSERT INTO Prescription VALUES 
+('PRES001', '123456789012', 'DOC001', TO_DATE('2024-01-01', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES002', '223456789012', 'DOC002', TO_DATE('2024-02-10', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES003', '323456789012', 'DOC003', TO_DATE('2024-03-15', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES004', '423456789012', 'DOC004', TO_DATE('2024-04-20', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES005', '523456789012', 'DOC005', TO_DATE('2024-05-25', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES006', '623456789012', 'DOC006', TO_DATE('2024-06-30', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES007', '723456789012', 'DOC007', TO_DATE('2024-07-15', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES008', '823456789012', 'DOC008', TO_DATE('2024-08-10', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES009', '923456789012', 'DOC009', TO_DATE('2024-09-20', 'YYYY-MM-DD'));
+INSERT INTO Prescription VALUES 
+('PRES010', '023456789012', 'DOC010', TO_DATE('2024-10-05', 'YYYY-MM-DD'));
+
+
+INSERT INTO PrescriptionDrug VALUES ('PRES001', 'DrugA', 2, 3);
+INSERT INTO PrescriptionDrug VALUES ('PRES001', 'DrugB', 1, 2);
+INSERT INTO PrescriptionDrug VALUES ('PRES002', 'DrugC', 3, 1);
+INSERT INTO PrescriptionDrug VALUES ('PRES002', 'DrugD', 4, 5);
+INSERT INTO PrescriptionDrug VALUES ('PRES003', 'DrugE', 2, 2);
+INSERT INTO PrescriptionDrug VALUES ('PRES004', 'DrugF', 1, 1);
+INSERT INTO PrescriptionDrug VALUES ('PRES005', 'DrugG', 5, 6);
+INSERT INTO PrescriptionDrug VALUES ('PRES005', 'DrugH', 2, 3);
+INSERT INTO PrescriptionDrug VALUES ('PRES006', 'DrugI', 4, 2);
+INSERT INTO PrescriptionDrug VALUES ('PRES007', 'DrugJ', 1, 4);
+
+INSERT INTO Employee VALUES ('EMP001', 'Tom', 'Jones', '123456789012', '1234567890', 'LIC001', 'Pharmacist', TO_DATE('2020-01-01', 'YYYY-MM-DD'), TO_DATE('2024-12-31', 'YYYY-MM-DD'), 50000, TO_DATE('1990-05-15', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP002', 'Lisa', 'Taylor', '223456789012', '0987654321', 'LIC002', 'Pharmacist', TO_DATE('2021-01-01', 'YYYY-MM-DD'), TO_DATE('2025-12-31', 'YYYY-MM-DD'), 60000, TO_DATE('1985-08-25', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP003', 'James', 'White', '323456789012', '5556667777', 'LIC003', 'Pharmacist', TO_DATE('2021-06-01', 'YYYY-MM-DD'), TO_DATE('2026-06-01', 'YYYY-MM-DD'), 55000, TO_DATE('1982-03-12', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP004', 'Sophia', 'Black', '423456789012', '4445556666', 'LIC004', 'Pharmacist', TO_DATE('2022-01-01', 'YYYY-MM-DD'), TO_DATE('2027-01-01', 'YYYY-MM-DD'), 65000, TO_DATE('1987-04-15', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP005', 'Robert', 'Green', '523456789012', '7778889999', 'LIC005', 'Pharmacist', TO_DATE('2023-02-01', 'YYYY-MM-DD'), TO_DATE('2028-02-01', 'YYYY-MM-DD'), 70000, TO_DATE('1990-02-20', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP006', 'Olivia', 'Young', '623456789012', '8889990000', 'LIC006', 'Pharmacist', TO_DATE('2020-03-01', 'YYYY-MM-DD'), TO_DATE('2025-03-01', 'YYYY-MM-DD'), 60000, TO_DATE('1988-05-18', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP007', 'William', 'Clark', '723456789012', '9990001111', 'LIC007', 'Pharmacist', TO_DATE('2019-04-01', 'YYYY-MM-DD'), TO_DATE('2024-04-01', 'YYYY-MM-DD'), 62000, TO_DATE('1993-01-10', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP008', 'Ava', 'King', '823456789012', '3334445555', 'LIC008', 'Pharmacist', TO_DATE('2021-07-01', 'YYYY-MM-DD'), TO_DATE('2026-07-01', 'YYYY-MM-DD'), 58000, TO_DATE('1992-08-12', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP009', 'Liam', 'Hall', '923456789012', '1112223333', 'LIC009', 'Pharmacist', TO_DATE('2023-05-01', 'YYYY-MM-DD'), TO_DATE('2028-05-01', 'YYYY-MM-DD'), 72000, TO_DATE('1989-03-25', 'YYYY-MM-DD'));
+INSERT INTO Employee VALUES ('EMP010', 'Mia', 'Hill', '023456789012', '6667778888', 'LIC010', 'Pharmacist', TO_DATE('2022-10-01', 'YYYY-MM-DD'), TO_DATE('2027-10-01', 'YYYY-MM-DD'), 59000, TO_DATE('1991-09-09', 'YYYY-MM-DD'));
+
+INSERT INTO Orders VALUES ('ORD001', 'PRES001', 'EMP001', TO_DATE('2024-06-10', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD002', 'PRES002', 'EMP002', TO_DATE('2024-06-15', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD003', 'PRES003', 'EMP003', TO_DATE('2024-06-20', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD004', 'PRES004', 'EMP004', TO_DATE('2024-06-25', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD005', 'PRES005', 'EMP005', TO_DATE('2024-06-30', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD006', 'PRES006', 'EMP006', TO_DATE('2024-07-05', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD007', 'PRES007', 'EMP007', TO_DATE('2024-07-15', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD008', 'PRES008', 'EMP008', TO_DATE('2024-07-25', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD009', 'PRES009', 'EMP009', TO_DATE('2024-08-05', 'YYYY-MM-DD'));
+INSERT INTO Orders VALUES ('ORD010', 'PRES010', 'EMP010', TO_DATE('2024-08-15', 'YYYY-MM-DD'));
+
+INSERT INTO OrderedDrugs VALUES ('ORD001', 'DrugA', 'BATCH001', 10, 100.00);
+INSERT INTO OrderedDrugs VALUES ('ORD002', 'DrugB', 'BATCH002', 20, 200.00);
+INSERT INTO OrderedDrugs VALUES ('ORD003', 'DrugC', 'BATCH003', 30, 300.00);
+INSERT INTO OrderedDrugs VALUES ('ORD004', 'DrugD', 'BATCH004', 40, 400.00);
+INSERT INTO OrderedDrugs VALUES ('ORD005', 'DrugE', 'BATCH005', 50, 500.00);
+INSERT INTO OrderedDrugs VALUES ('ORD006', 'DrugF', 'BATCH006', 15, 150.00);
+INSERT INTO OrderedDrugs VALUES ('ORD007', 'DrugG', 'BATCH007', 25, 250.00);
+INSERT INTO OrderedDrugs VALUES ('ORD008', 'DrugH', 'BATCH008', 35, 350.00);
+INSERT INTO OrderedDrugs VALUES ('ORD009', 'DrugI', 'BATCH009', 45, 450.00);
+INSERT INTO OrderedDrugs VALUES ('ORD010', 'DrugJ', 'BATCH010', 55, 550.00);
+
+
+INSERT INTO Bill VALUES ('ORD001', '123456789012', 1000.00, 500.00, 500.00);
+INSERT INTO Bill VALUES ('ORD002', '223456789012', 2000.00, 1000.00, 1000.00);
+INSERT INTO Bill VALUES ('ORD003', '323456789012', 3000.00, 1500.00, 1500.00);
+INSERT INTO Bill VALUES ('ORD004', '423456789012', 4000.00, 2000.00, 2000.00);
+INSERT INTO Bill VALUES ('ORD005', '523456789012', 5000.00, 2500.00, 2500.00);
+INSERT INTO Bill VALUES ('ORD006', '623456789012', 6000.00, 3000.00, 3000.00);
+INSERT INTO Bill VALUES ('ORD007', '723456789012', 7000.00, 3500.00, 3500.00);
+INSERT INTO Bill VALUES ('ORD008', '823456789012', 8000.00, 4000.00, 4000.00);
+INSERT INTO Bill VALUES ('ORD009', '923456789012', 9000.00, 4500.00, 4500.00);
+INSERT INTO Bill VALUES ('ORD010', '023456789012', 10000.00, 5000.00, 5000.00);
+
+INSERT INTO Employee_Notification VALUES ('EMP001', 'NOT001');
+INSERT INTO Employee_Notification VALUES ('EMP002', 'NOT002');
+INSERT INTO Employee_Notification VALUES ('EMP003', 'NOT003');
+INSERT INTO Employee_Notification VALUES ('EMP004', 'NOT004');
+INSERT INTO Employee_Notification VALUES ('EMP005', 'NOT005');
+INSERT INTO Employee_Notification VALUES ('EMP006', 'NOT006');
+INSERT INTO Employee_Notification VALUES ('EMP007', 'NOT007');
+INSERT INTO Employee_Notification VALUES ('EMP008', 'NOT008');
+INSERT INTO Employee_Notification VALUES ('EMP009', 'NOT009');
+INSERT INTO Employee_Notification VALUES ('EMP010', 'NOT010');
+
+INSERT INTO Notification VALUES ('NOT001', 'Warning', 'Check drug stock levels');
+INSERT INTO Notification VALUES ('NOT002', 'Alert', 'New prescription order received');
+INSERT INTO Notification VALUES ('NOT003', 'Reminder', 'Prescription renewal due');
+INSERT INTO Notification VALUES ('NOT004', 'Notification', 'Inventory low for DrugA');
+INSERT INTO Notification VALUES ('NOT005', 'Update', 'New drugs available for order');
+INSERT INTO Notification VALUES ('NOT006', 'Info', 'Check supplier details');
+INSERT INTO Notification VALUES ('NOT007', 'Warning', 'Refrigerated items must be stored properly');
+INSERT INTO Notification VALUES ('NOT008', 'Alert', 'Recall for DrugB issued');
+INSERT INTO Notification VALUES ('NOT009', 'Reminder', 'Follow-up with patient after 1 week');
+INSERT INTO Notification VALUES ('NOT010', 'Update', 'New health insurance options available');
+
+-- Insert data into Employee_Disposed_Drugs
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP001', 'DrugA', 'BATCH001', TO_DATE('2024-06-01', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP002', 'DrugB', 'BATCH002', TO_DATE('2024-06-05', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP003', 'DrugC', 'BATCH003', TO_DATE('2024-06-10', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP004', 'DrugD', 'BATCH004', TO_DATE('2024-06-15', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP005', 'DrugE', 'BATCH005', TO_DATE('2024-06-20', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP006', 'DrugF', 'BATCH006', TO_DATE('2024-06-25', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP007', 'DrugG', 'BATCH007', TO_DATE('2024-06-30', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP008', 'DrugH', 'BATCH008', TO_DATE('2024-07-05', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP009', 'DrugI', 'BATCH009', TO_DATE('2024-07-10', 'YYYY-MM-DD'));
+INSERT INTO Employee_Disposed_Drugs VALUES ('EMP010', 'DrugJ', 'BATCH010', TO_DATE('2024-07-15', 'YYYY-MM-DD'));
+
+-- Insert data into Disposed
+INSERT INTO Disposed VALUES ('DrugA', 'BATCH001', TO_DATE('2024-06-01', 'YYYY-MM-DD'), 5, 'HealthCare Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugB', 'BATCH002', TO_DATE('2024-06-05', 'YYYY-MM-DD'), 3, 'LifePlus Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugC', 'BATCH003', TO_DATE('2024-06-10', 'YYYY-MM-DD'), 4, 'SecureLife Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugD', 'BATCH004', TO_DATE('2024-06-15', 'YYYY-MM-DD'), 6, 'MediCare Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugE', 'BATCH005', TO_DATE('2024-06-20', 'YYYY-MM-DD'), 2, 'Wellness Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugF', 'BATCH006', TO_DATE('2024-06-25', 'YYYY-MM-DD'), 7, 'CarePlus Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugG', 'BATCH007', TO_DATE('2024-06-30', 'YYYY-MM-DD'), 1, 'TotalHealth Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugH', 'BATCH008', TO_DATE('2024-07-05', 'YYYY-MM-DD'), 8, 'FamilyGuard Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugI', 'BATCH009', TO_DATE('2024-07-10', 'YYYY-MM-DD'), 3, 'LifeSecure Pharmaceuticals');
+INSERT INTO Disposed VALUES ('DrugJ', 'BATCH010', TO_DATE('2024-07-15', 'YYYY-MM-DD'), 4, 'SafeHealth Pharmaceuticals');
+
+-- Insert data into Medicine
+INSERT INTO Medicine VALUES ('DrugA', 'BATCH001', 100.00, 50, 'PharmaCorp', 'Antibiotic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugB', 'BATCH002', 200.00, 60, 'HealthPlus', 'Analgesic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugC', 'BATCH003', 150.00, 70, 'CureWell', 'Antipyretic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugD', 'BATCH004', 250.00, 80, 'MediCo', 'Antidepressant', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugE', 'BATCH005', 300.00, 90, 'PharmaInc', 'Antihistamine', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugF', 'BATCH006', 175.00, 40, 'PharmaCorp', 'Antibiotic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugG', 'BATCH007', 90.00, 30, 'HealthCare', 'Pain Reliever', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugH', 'BATCH008', 120.00, 20, 'Wellness', 'Cough Syrup', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugI', 'BATCH009', 95.00, 25, 'Wellbeing', 'Vitamin', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+INSERT INTO Medicine VALUES ('DrugJ', 'BATCH010', 180.00, 45, 'CureWell', 'Antibiotic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+
+
+SELECT SUM(TotalAmt) AS TotalSales FROM Bill;
+SELECT COUNT(PrespID) AS PrescriptionCount FROM Prescription WHERE AadharNo = '123456789012';
+SELECT MAX(Price) AS MaxPrice FROM Medicine;
+
+
+CREATE OR REPLACE PROCEDURE CheckDrugStock (p_DrugName IN VARCHAR2) IS
+    StockCount NUMBER;
+BEGIN
+    SELECT StockQty INTO StockCount
+    FROM Medicine
+    WHERE DrugName = p_DrugName;
+
+    IF StockCount > 0 THEN
+        DBMS_OUTPUT.PUT_LINE('The drug ' || p_DrugName || ' is in stock with quantity: ' || StockCount);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('The drug ' || p_DrugName || ' is out of stock.');
+    END IF;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('The drug ' || p_DrugName || ' does not exist in the inventory.');
+END CheckDrugStock;
+/
+
+BEGIN
+    CheckDrugStock('DrugA');
+END;
+/
+
+
+
+
+CREATE OR REPLACE PROCEDURE GenerateOrderReport
+IS
+BEGIN
+    FOR rec IN (SELECT OrderID, PrespID, EmpID FROM Orders) LOOP
+        DBMS_OUTPUT.PUT_LINE('Order ID: ' || rec.OrderID || ', Prescription ID: ' || rec.PrespID || ', Employee ID: ' || rec.EmpID);
+    END LOOP;
+END GenerateOrderReport;
+/
+SET SERVEROUTPUT ON;
+
+BEGIN
+    GenerateOrderReport;
+END;
+/
+
+
+
+CREATE OR REPLACE FUNCTION CalculateDiscount(TotalAmount IN NUMBER)
+RETURN NUMBER
+IS
+    DiscountAmount NUMBER;
+BEGIN
+    IF TotalAmount < 1000 THEN
+        DiscountAmount := 0;
+    ELSIF TotalAmount >= 1000 AND TotalAmount < 5000 THEN
+        DiscountAmount := TotalAmount * 0.05;
+    ELSIF TotalAmount >= 5000 AND TotalAmount < 10000 THEN
+        DiscountAmount := TotalAmount * 0.10;
+    ELSE
+        DiscountAmount := TotalAmount * 0.15;
+    END IF;
+
+    RETURN DiscountAmount;
+END CalculateDiscount;
+/
+
+SET SERVEROUTPUT ON;
+
+DECLARE
+    DiscountAmount NUMBER;
+BEGIN
+    DiscountAmount := CalculateDiscount(950);
+    DBMS_OUTPUT.PUT_LINE('The discount for amount 950 is: ' || DiscountAmount);
+
+    DiscountAmount := CalculateDiscount(2000);
+    DBMS_OUTPUT.PUT_LINE('The discount for amount 2000 is: ' || DiscountAmount);
+
+    DiscountAmount := CalculateDiscount(7000);
+    DBMS_OUTPUT.PUT_LINE('The discount for amount 7000 is: ' || DiscountAmount);
+
+    DiscountAmount := CalculateDiscount(12000);
+    DBMS_OUTPUT.PUT_LINE('The discount for amount 12000 is: ' || DiscountAmount);
+END;
+/
+
+
+CREATE OR REPLACE FUNCTION GetPrescriptionsByCustomer(p_AadharNo IN VARCHAR2)
+RETURN NUMBER
+IS
+    PrescriptionCount NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO PrescriptionCount
+    FROM Prescription
+    WHERE AadharNo = p_AadharNo;
+
+    RETURN PrescriptionCount;
+END GetPrescriptionsByCustomer;
+/
+SET SERVEROUTPUT ON;
+
+DECLARE
+    Result NUMBER;
+BEGIN
+    Result := GetPrescriptionsByCustomer('123456789012'); -- Replace with the desired Aadhar number
+    DBMS_OUTPUT.PUT_LINE('Prescription Count: ' || Result);
+END;
+/
+
+
+
+
+CREATE OR REPLACE TRIGGER trg_Uppercase_DrugName
+BEFORE INSERT OR UPDATE ON Medicine
+FOR EACH ROW
+BEGIN
+    :NEW.DrugName := UPPER(:NEW.DrugName);
+END;
+/
+
+
+INSERT INTO Medicine (DrugName, BatchNo, Price, StockQty, Manufacturer, MedType, ExpiryDate)
+VALUES ('aspirin', 'BATCH001', 100.00, 50, 'PharmaCorp', 'Analgesic', TO_DATE('2025-01-01', 'YYYY-MM-DD'));
+
+UPDATE Medicine SET DrugName = 'ibuprofen' WHERE BatchNo = 'BATCH002';
+
+SELECT * FROM Medicine;
+
+
+
+-- 4. Joins
+-- Example: A query to get a list of all prescriptions along with customer names and insurance company names.
+SELECT 
+    c.Fname AS CustomerFirstName, 
+    c.Lname AS CustomerLastName, 
+    p.PrespID AS PrescriptionID
+FROM 
+    Customer c
+INNER JOIN 
+    Prescription p ON c.AadharNo = p.AadharNo;
+
+
+
+SELECT 
+    c.Fname AS CustomerFirstName, 
+    c.Lname AS CustomerLastName, 
+    p.PrespID AS PrescriptionID
+FROM 
+    Customer c
+LEFT OUTER JOIN 
+    Prescription p ON c.AadharNo = p.AadharNo;
+
+
+SELECT 
+    c.Fname AS CustomerFirstName, 
+    c.Lname AS CustomerLastName, 
+    p.PrespID AS PrescriptionID
+FROM 
+    Customer c
+RIGHT OUTER JOIN 
+    Prescription p ON c.AadharNo = p.AadharNo;
+
+
+
+-- Cross Join between Prescription and Employee to get every combination of prescriptions and employees
+SELECT 
+    Presp.PrespID,
+    Emp.EmpID,
+    Emp.Fname,
+    Emp.Lname
+FROM 
+    Prescription Presp
+CROSS JOIN 
+    Employee Emp;
+
+
+
+-- 5. Views
+-- Example: Creating a view to simplify access to customer and 
+CREATE OR REPLACE VIEW CustomerPrescriptionView AS
+SELECT 
+    c.Fname AS CustomerFirstName,
+    c.Lname AS CustomerLastName,
+    p.PrespID,
+    p.PrespDate
+FROM 
+    Customer c
+JOIN 
+    Prescription p ON c.AadharNo = p.AadharNo;
+
+
+
+SELECT * FROM CustomerPrescriptionView;
+
+
+CREATE VIEW TotalBillView AS
+SELECT 
+    B.AadharNo,
+    SUM(B.TotalAmt) AS TotalAmount
+FROM 
+    Bill B
+GROUP BY 
+    B.AadharNo;
+
+CREATE VIEW TotalBillView AS
+SELECT 
+    B.AadharNo,
+    SUM(B.TotalAmt) AS TotalAmount
+FROM 
+    Bill B
+GROUP BY 
+    B.AadharNo;
+select * from totalbillview;
+
+
+
+CREATE OR REPLACE PROCEDURE CheckEmployeeSalary(p_EmpID IN VARCHAR2) IS
+    v_Salary NUMBER;
+BEGIN
+    SELECT Salary INTO v_Salary FROM Employee WHERE EmpID = p_EmpID;
+
+    DBMS_OUTPUT.PUT_LINE('Salary for Employee ID ' || p_EmpID || ' is: ' || v_Salary);
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Error: No employee found with ID ' || p_EmpID);
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+END CheckEmployeeSalary;
+/
+BEGIN
+    CheckEmployeeSalary('EMP001');
+END;
+/
